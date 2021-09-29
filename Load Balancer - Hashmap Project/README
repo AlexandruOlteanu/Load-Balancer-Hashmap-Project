@@ -1,0 +1,26 @@
+ Copyright : Alexandru Olteanu (alexandruolteanu77@gmail.com)
+ 
+ 	
+	Am ales ca pentru aceasta tema sa folosesc vectori de structuri de date pentru 
+a stoca serverele si hashmap-urile. Odata initializat Load Balancer-ul, la adaugarea 
+unui nou server am alocat memorie pentru un nou server, am cautat pozitia corespunzatoare 
+pentru a stoca serverul incat dupa respectiva adaugare hash-urile etichetelor tuturor 
+serverelor sa fie in ordine crescatoare si am mutat spre dreapta toate serverele pornind 
+de la pozitia gasita + 1 pentru a putea stoca informatie pe serverul nou!. Desigur, odata 
+cu adaugarea unui nou server, se pot muta produse pe cele 3 replici ale acestuia asa ca 
+pentru fiecare in parte, la adaugare, am remapat toate produsele din serverul succesor celui
+curent pentru a ma asigura ca mereu produsele sunt stocate pe serverul potrivit. In momentul 
+cand am gasit un produs ce trebuie mutat, il mut pe serverul curent si apoi ii dau remove de 
+pe serverul succesor!
+	Daca trebuie scos un server, putem demonstra usor ca mereu toate produsele 
+pe care acesta le contine vor fi mutate pe serverul succesor. Astfel, fiecaruia
+in parte ii dau store pe serverul urmator. Pentru a sterge serverul, facem 
+o mutare spre dreapta a acestuia pana ajunge pe ultima pozitie dupa care eliberam
+memoria si decrementam numarul de servere.
+	Pentru stocarea unui produs parcurgem fiecare server in ordine crescatoare si daca
+hash-ul acestuia este mai mare decat hash-ul produsului, il stocam pe acest server.
+	La retrieve, doar cautam produsul dupa cheie in toate serverele.
+	In final, a trebuit sa tinem cont de eliberarea intregii memorii pentru a nu avea
+memory leak-uri.
+	Astfel, implementate aceste functii, am reusit sa creem Load Balancer-ul dorit
+care sa stocheze in mod eficient produsele pe servere in mod cat mai uniform.
